@@ -1,0 +1,80 @@
+{
+  "name": "tiptap-content-kit",
+  "version": "0.1.0",
+  "description": "Production-hardened content parsers, Tiptap extensions, and utilities for converting Markdown, DOCX, Confluence, and more into Tiptap-compatible blocks.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./parsers": {
+      "types": "./dist/parsers.d.ts",
+      "import": "./dist/parsers.js",
+      "require": "./dist/parsers.cjs"
+    },
+    "./schema": {
+      "types": "./dist/schema.d.ts",
+      "import": "./dist/schema.js",
+      "require": "./dist/schema.cjs"
+    },
+    "./extensions": {
+      "types": "./dist/extensions.d.ts",
+      "import": "./dist/extensions.js",
+      "require": "./dist/extensions.cjs"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "import": "./dist/utils.js",
+      "require": "./dist/utils.cjs"
+    },
+    "./providers": {
+      "types": "./dist/providers.d.ts",
+      "import": "./dist/providers.js",
+      "require": "./dist/providers.cjs"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "entities": "^6.0.0",
+    "uuid": "^11.1.0"
+  },
+  "peerDependencies": {
+    "@tiptap/core": ">=2.0.0",
+    "@tiptap/react": ">=2.0.0",
+    "mammoth": ">=1.0.0",
+    "mermaid": ">=10.0.0",
+    "pdf-parse": ">=2.0.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "word-extractor": ">=1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@tiptap/core": { "optional": true },
+    "@tiptap/react": { "optional": true },
+    "mammoth": { "optional": true },
+    "mermaid": { "optional": true },
+    "pdf-parse": { "optional": true },
+    "react": { "optional": true },
+    "react-dom": { "optional": true },
+    "word-extractor": { "optional": true }
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "@types/react": "^19.0.0",
+    "@types/uuid": "^10.0.0"
+  }
+}
