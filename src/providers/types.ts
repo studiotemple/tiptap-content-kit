@@ -15,9 +15,19 @@ export interface ConfluenceConfig {
   siteUrl?: string;
 }
 
+export interface LLMGenerateOptions {
+  systemPrompt?: string;
+  temperature?: number;
+  maxTokens?: number;
+}
+
+/**
+ * LLM provider interface — works with any LLM (OpenAI, Anthropic, Google, Ollama, etc.)
+ * Implement this interface to plug in your preferred model.
+ */
 export interface LLMProvider {
-  /** Generate text from a prompt */
-  generateText: (prompt: string, options?: { systemPrompt?: string; temperature?: number }) => Promise<string>;
+  /** Generate text from a prompt using any LLM */
+  generateText: (prompt: string, options?: LLMGenerateOptions) => Promise<string>;
 }
 
 export interface StorageProvider {

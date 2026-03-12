@@ -210,9 +210,12 @@ const config: ContentKitConfig = {
 
 ### LLM Provider
 
+The `LLMProvider` interface works with **any LLM** -- OpenAI, Anthropic Claude, Google Gemini, Ollama, or any other provider. Just implement the `generateText` function.
+
+#### OpenAI
+
 ```typescript
 import OpenAI from 'openai';
-
 const openai = new OpenAI();
 
 const config: ContentKitConfig = {
@@ -221,12 +224,80 @@ const config: ContentKitConfig = {
       const res = await openai.chat.completions.create({
         model: 'gpt-4o-mini',
         temperature: options?.temperature ?? 0.3,
+        max_tokens: options?.maxTokens,
         messages: [
           ...(options?.systemPrompt ? [{ role: 'system' as const, content: options.systemPrompt }] : []),
           { role: 'user' as const, content: prompt },
         ],
       });
       return res.choices[0]?.message?.content ?? '';
+    },
+  },
+};
+```
+
+#### Anthropic Claude
+
+```typescript
+import Anthropic from '@anthropic-ai/sdk';
+const anthropic = new Anthropic();
+
+const config: ContentKitConfig = {
+  llm: {
+    generateText: async (prompt, options) => {
+      const res = await anthropic.messages.create({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: options?.maxTokens ?? 4096,
+        system: options?.systemPrompt,
+        messages: [{ role: 'user', content: prompt }],
+      });
+      return res.content[0].type === 'text' ? res.content[0].text : '';
+    },
+  },
+};
+```
+
+#### Google Gemini
+
+```typescript
+import { GoogleGenAI } from '@google/genai';
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
+
+const config: ContentKitConfig = {
+  llm: {
+    generateText: async (prompt, options) => {
+      const res = await ai.models.generateContent({
+        model: 'gemini-2.0-flash',
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        config: {
+          systemInstruction: options?.systemPrompt,
+          temperature: options?.temperature ?? 0.3,
+          maxOutputTokens: options?.maxTokens,
+        },
+      });
+      return res.text ?? '';
+    },
+  },
+};
+```
+
+#### Ollama (Local)
+
+```typescript
+const config: ContentKitConfig = {
+  llm: {
+    generateText: async (prompt, options) => {
+      const res = await fetch('http://localhost:11434/api/generate', {
+        method: 'POST',
+        body: JSON.stringify({
+          model: 'llama3',
+          prompt: options?.systemPrompt ? `${options.systemPrompt}\n\n${prompt}` : prompt,
+          stream: false,
+          options: { temperature: options?.temperature ?? 0.3 },
+        }),
+      });
+      const data = await res.json();
+      return data.response;
     },
   },
 };
