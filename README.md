@@ -22,11 +22,11 @@ Full-featured Tiptap editor with rich toolbar, AI assistant, table controls, spe
 
 | Light Mode | Dark Mode |
 | :---: | :---: |
-| ![Light Mode](docs/screenshots/editor-light.png) | ![Dark Mode](docs/screenshots/editor-dark.png) |
+| ![Light Mode](https://raw.githubusercontent.com/studiotemple/tiptap-content-kit/main/docs/screenshots/editor-light.png) | ![Dark Mode](https://raw.githubusercontent.com/studiotemple/tiptap-content-kit/main/docs/screenshots/editor-dark.png) |
 
 | Code Blocks & Syntax Highlighting | AI Assistant |
 | :---: | :---: |
-| ![Code Blocks](docs/screenshots/code-blocks.png) | ![AI Assistant](docs/screenshots/ai-assistant.png) |
+| ![Code Blocks](https://raw.githubusercontent.com/studiotemple/tiptap-content-kit/main/docs/screenshots/code-blocks.png) | ![AI Assistant](https://raw.githubusercontent.com/studiotemple/tiptap-content-kit/main/docs/screenshots/ai-assistant.png) |
 
 ## Installation
 
