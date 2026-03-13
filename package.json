@@ -1,8 +1,17 @@
 {
   "name": "tiptap-content-kit",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Full-featured Tiptap editor with rich toolbar, table controls, AI assistant, special blocks, i18n, and content parsers.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/studiotemple/tiptap-content-kit.git"
+  },
+  "homepage": "https://github.com/studiotemple/tiptap-content-kit#readme",
+  "bugs": {
+    "url": "https://github.com/studiotemple/tiptap-content-kit/issues"
+  },
+  "keywords": ["tiptap", "editor", "rich-text", "react", "vue", "i18n", "ai", "markdown", "content-kit"],
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
