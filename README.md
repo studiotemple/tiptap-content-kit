@@ -9,10 +9,10 @@ Production-hardened content parsers and Tiptap extensions for converting Markdow
 ## Features
 
 - **5 content parsers** -- Markdown, DOCX, DOC, PDF, and Confluence Storage Format (XHTML to blocks or Markdown)
-- **10 Tiptap editor extensions** -- Callout, Diagram (Mermaid/PlantUML), CodeBlockTabs, ResizableImage, HtmlEmbed, Embed (Figma), YouTube, Anchor, DocumentLink, MarkdownShortcuts
+- **10 Tiptap editor extensions** -- React & Vue 3 지원. Callout, Diagram (Mermaid/PlantUML), CodeBlockTabs, ResizableImage, HtmlEmbed, Embed (Figma), YouTube, Anchor, DocumentLink, MarkdownShortcuts
 - **Block schema with validation** -- Canonical block types, sanitization pipeline, AI output validation
 - **Utility functions** -- HTML sanitizer for sandboxed iframes, Figma URL parser with Embed Kit 2.0 support
-- **Provider interfaces** -- Plug in your own Confluence OAuth, LLM, storage, and GitHub credentials
+- **Provider interfaces** -- Plug in your own Confluence OAuth, LLM, and storage providers
 
 ## Installation
 
@@ -31,8 +31,11 @@ yarn add tiptap-content-kit
 All peer dependencies are **optional** -- install only what you need:
 
 ```bash
-# For Tiptap extensions
+# For Tiptap extensions (React)
 npm install @tiptap/core @tiptap/react react react-dom
+
+# For Tiptap extensions (Vue 3)
+npm install @tiptap/core @tiptap/vue-3 vue
 
 # For DOCX parsing
 npm install mammoth
@@ -107,7 +110,7 @@ const markdown = parseConfluenceStorageToMarkdown(storageFormatXhtml, {
 });
 ```
 
-### Using Tiptap Extensions
+### Using Tiptap Extensions (React)
 
 ```typescript
 import { CalloutExtension, DiagramExtension, ResizableImage } from 'tiptap-content-kit/extensions';
@@ -117,9 +120,26 @@ import { useEditor } from '@tiptap/react';
 const editor = useEditor({
   extensions: [
     StarterKit,
-    CalloutExtension,            // info / warning / error / success / tip
-    DiagramExtension,            // Mermaid + PlantUML
-    ResizableImage,              // Drag-to-resize images
+    CalloutExtension,
+    DiagramExtension,
+    ResizableImage,
+  ],
+});
+```
+
+### Using Tiptap Extensions (Vue 3)
+
+```typescript
+import { CalloutExtension, DiagramExtension, ResizableImage } from 'tiptap-content-kit/extensions-vue';
+import StarterKit from '@tiptap/starter-kit';
+import { useEditor } from '@tiptap/vue-3';
+
+const editor = useEditor({
+  extensions: [
+    StarterKit,
+    CalloutExtension,
+    DiagramExtension,
+    ResizableImage,
   ],
 });
 ```
@@ -162,9 +182,10 @@ const embedUrl = buildFigmaEmbedUrl(info, 'my-app');
 |---|---|
 | `tiptap-content-kit/parsers` | `parseFile`, `markdownToBlocks`, `docxHtmlToBlocks`, `parseConfluenceContent`, `parseConfluenceStorageToMarkdown`, and more |
 | `tiptap-content-kit/schema` | `BLOCK_TYPES`, `DocumentBlock`, `sanitizeBlock`, `isValidBlockType`, `validateAIOutput` |
-| `tiptap-content-kit/extensions` | `CalloutExtension`, `DiagramExtension`, `CodeBlockTabsExtension`, `HtmlEmbedExtension`, `EmbedExtension`, `ResizableImage`, `YoutubeEmbed`, `AnchorExtension`, `DocumentLinkList`, `MarkdownShortcuts` |
+| `tiptap-content-kit/extensions` | React 버전: `CalloutExtension`, `DiagramExtension`, `CodeBlockTabsExtension`, `HtmlEmbedExtension`, `EmbedExtension`, `ResizableImage`, `YoutubeEmbed`, `AnchorExtension`, `DocumentLinkList`, `MarkdownShortcuts` |
+| `tiptap-content-kit/extensions-vue` | Vue 3 버전: 위와 동일한 extensions (Vue 3 + @tiptap/vue-3 기반) |
 | `tiptap-content-kit/utils` | `sanitizeHtmlForEmbed`, `parseFigmaUrl`, `buildFigmaEmbedUrl` |
-| `tiptap-content-kit/providers` | `ContentKitConfig`, `ConfluenceConfig`, `LLMProvider`, `StorageProvider`, `GitHubConfig` |
+| `tiptap-content-kit/providers` | `ContentKitConfig`, `ConfluenceConfig`, `LLMProvider`, `StorageProvider` |
 
 ### Block Types
 
@@ -187,7 +208,6 @@ const config: ContentKitConfig = {
   confluence: { ... },
   llm: { ... },
   storage: { ... },
-  github: { ... },
 };
 ```
 
@@ -326,17 +346,6 @@ const config: ContentKitConfig = {
 };
 ```
 
-### GitHub
-
-```typescript
-const config: ContentKitConfig = {
-  github: {
-    token: process.env.GITHUB_TOKEN!,
-    enterpriseHost: 'github.mycompany.com', // optional, for GHE
-  },
-};
-```
-
 ## Supported File Types
 
 | Format | Extension | MIME Type | Parser |
@@ -372,7 +381,7 @@ npm run dev
 
 - All peer dependencies (`@tiptap/core`, `@tiptap/react`, `mermaid`, etc.) are installed automatically as `devDependencies` for the build — you don't need to install them separately.
 - When adding new parsers, export them from `src/parsers/index.ts`.
-- When adding new extensions, export them from `src/extensions/index.ts`.
+- When adding new extensions, export them from `src/extensions/index.ts` (React) and `src/extensions-vue/index.ts` (Vue 3).
 - Block types must be registered in `src/schema/block-schema.ts` (`BLOCK_TYPES` array).
 - Please run `npm run typecheck` before submitting a PR to ensure zero type errors.
 
