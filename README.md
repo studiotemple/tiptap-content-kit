@@ -1,6 +1,6 @@
 # tiptap-content-kit
 
-Production-hardened content parsers and Tiptap extensions for converting Markdown, DOCX, PDF, Confluence, and more into Tiptap-compatible document blocks.
+Full-featured Tiptap editor with rich toolbar, AI assistant, table controls, special blocks, i18n, dark mode, and production-hardened content parsers.
 
 [![npm version](https://img.shields.io/npm/v/tiptap-content-kit)](https://www.npmjs.com/package/tiptap-content-kit)
 [![license](https://img.shields.io/npm/l/tiptap-content-kit)](./LICENSE)
@@ -8,11 +8,25 @@ Production-hardened content parsers and Tiptap extensions for converting Markdow
 
 ## Features
 
+- **Rich Editor Component** -- Drop-in React editor with toolbar, table controls, code blocks, AI assistant, and special blocks
 - **5 content parsers** -- Markdown, DOCX, DOC, PDF, and Confluence Storage Format (XHTML to blocks or Markdown)
-- **10 Tiptap editor extensions** -- React & Vue 3 지원. Callout, Diagram (Mermaid/PlantUML), CodeBlockTabs, ResizableImage, HtmlEmbed, Embed (Figma), YouTube, Anchor, DocumentLink, MarkdownShortcuts
+- **10 Tiptap editor extensions** -- React & Vue 3 support. Callout, Diagram (Mermaid/PlantUML), CodeBlockTabs, ResizableImage, HtmlEmbed, Embed (Figma), YouTube, Anchor, DocumentLink, MarkdownShortcuts
 - **Block schema with validation** -- Canonical block types, sanitization pipeline, AI output validation
+- **AI-powered features** -- Translation (7 languages), content cleanup, URL/file import, document search
+- **Dark mode** -- CSS variable-based theming with `.dark` class toggle
+- **i18n** -- Built-in English and Korean, extensible to any language
 - **Utility functions** -- HTML sanitizer for sandboxed iframes, Figma URL parser with Embed Kit 2.0 support
-- **Provider interfaces** -- Plug in your own Confluence OAuth, LLM, and storage providers
+- **Provider interfaces** -- Plug in your own LLM, image upload, Confluence OAuth, and storage providers
+
+## Screenshots
+
+| Light Mode | Dark Mode |
+| :---: | :---: |
+| ![Light Mode](docs/screenshots/editor-light.png) | ![Dark Mode](docs/screenshots/editor-dark.png) |
+
+| Code Blocks & Syntax Highlighting | AI Assistant |
+| :---: | :---: |
+| ![Code Blocks](docs/screenshots/code-blocks.png) | ![AI Assistant](docs/screenshots/ai-assistant.png) |
 
 ## Installation
 
@@ -31,10 +45,13 @@ yarn add tiptap-content-kit
 All peer dependencies are **optional** -- install only what you need:
 
 ```bash
-# For Tiptap extensions (React)
+# For the Editor component (React)
+npm install @tiptap/react @tiptap/core @tiptap/starter-kit @tiptap/extension-underline @tiptap/extension-text-align @tiptap/extension-table @tiptap/extension-table-row @tiptap/extension-table-cell @tiptap/extension-table-header @tiptap/extension-link @tiptap/extension-image @tiptap/extension-placeholder @tiptap/extension-task-list @tiptap/extension-task-item @tiptap/extension-code-block-lowlight lowlight react react-dom
+
+# For Tiptap extensions only (React)
 npm install @tiptap/core @tiptap/react react react-dom
 
-# For Tiptap extensions (Vue 3)
+# For Tiptap extensions only (Vue 3)
 npm install @tiptap/core @tiptap/vue-3 vue
 
 # For DOCX parsing
@@ -48,6 +65,291 @@ npm install pdf-parse
 
 # For Diagram extension
 npm install mermaid
+```
+
+## Editor Component (React)
+
+A batteries-included rich text editor built on Tiptap.
+
+### Basic Usage
+
+```tsx
+import { ContentKitProvider, ContentKitEditor } from 'tiptap-content-kit/editor';
+import 'tiptap-content-kit/editor/style.css';
+
+function MyEditor() {
+  return (
+    <ContentKitProvider locale="en" providers={{}}>
+      <ContentKitEditor
+        content={initialContent}
+        onChange={(json) => console.log(json)}
+        editable={true}
+        placeholder="Start writing..."
+      />
+    </ContentKitProvider>
+  );
+}
+```
+
+### ContentKitEditor Props
+
+| Prop | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `content` | `any` (Tiptap JSON) | `undefined` | Initial editor content |
+| `onChange` | `(content: any) => void` | `undefined` | Called on content change |
+| `editable` | `boolean` | `true` | Enable/disable editing |
+| `placeholder` | `string` | `"Start writing..."` | Placeholder text |
+| `locale` | `string` | `"en"` | Editor UI language (en, ko) |
+| `className` | `string` | `undefined` | Additional CSS classes |
+| `onImageUpload` | `(file: File) => Promise<string>` | `undefined` | Image upload handler |
+| `extensions` | `any[]` | `[]` | Additional Tiptap extensions |
+| `toolbarClassName` | `string` | `undefined` | Toolbar wrapper CSS classes |
+| `editorClassName` | `string` | `undefined` | Editor content CSS classes |
+
+### ContentKitProvider Props
+
+| Prop | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `locale` | `string` | `"en"` | UI language |
+| `providers` | `EditorProviders` | `{}` | Service providers |
+| `messages` | `Record<string, EditorMessages>` | `{}` | Custom i18n messages |
+| `supportedLocales` | `EditorLocale[]` | `[{code:'en',...},{code:'ko',...}]` | Available locales |
+
+## Multi-Locale Editor
+
+`MultiLocaleEditor` wraps `ContentKitEditor` with locale tabs. When only one locale is configured, no tabs are shown and it behaves like a single editor. When multiple locales are configured, each tab manages its own content independently.
+
+### Basic Usage (Single Editor -- No Tabs)
+
+```tsx
+import { ContentKitProvider, MultiLocaleEditor } from 'tiptap-content-kit/editor';
+import 'tiptap-content-kit/editor/style.css';
+
+function MyEditor() {
+  const [contents, setContents] = useState<Record<string, any>>({
+    en: initialContent,
+  });
+
+  return (
+    <ContentKitProvider locale="en" providers={{}}>
+      <MultiLocaleEditor
+        locales={[{ code: 'en', label: 'English' }]}
+        contents={contents}
+        onChange={setContents}
+      />
+    </ContentKitProvider>
+  );
+}
+```
+
+### Multi-Locale with Tabs
+
+```tsx
+import { ContentKitProvider, MultiLocaleEditor } from 'tiptap-content-kit/editor';
+import 'tiptap-content-kit/editor/style.css';
+
+function MyEditor() {
+  const [contents, setContents] = useState<Record<string, any>>({
+    en: initialContent,
+  });
+
+  return (
+    <ContentKitProvider
+      locale="en"
+      providers={myProviders}
+      supportedLocales={[
+        { code: 'en', label: 'English' },
+        { code: 'ko', label: '한국어' },
+        { code: 'ja', label: '日本語' },
+      ]}
+    >
+      <MultiLocaleEditor
+        locales={[
+          { code: 'en', label: 'English' },
+          { code: 'ko', label: '한국어' },
+          { code: 'ja', label: '日本語' },
+        ]}
+        defaultLocale="en"
+        contents={contents}
+        onChange={setContents}
+        placeholder="Start writing..."
+      />
+    </ContentKitProvider>
+  );
+}
+```
+
+Each tab shows a colored dot: green when the locale has content, gray when empty. AI translation with "Cross Tab" mode automatically writes the translated result into the target locale tab.
+
+### MultiLocaleEditor Props
+
+| Prop | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `locales` | `EditorLocale[]` | required | Locale tabs to display. If only 1, no tabs shown. |
+| `defaultLocale` | `string` | First locale code | Initial active locale |
+| `contents` | `Record<string, any>` | `{}` | Content per locale: `{ en: tiptapJSON, ko: tiptapJSON }` |
+| `onChange` | `(contents: Record<string, any>) => void` | `undefined` | Called when any locale's content changes |
+| `placeholder` | `string` | `undefined` | Placeholder text for empty editors |
+| `editable` | `boolean` | `true` | Enable/disable editing |
+| ...other | | | All `ContentKitEditor` props are passed through |
+
+> **Note:** Pass `supportedLocales` to `ContentKitProvider` as well -- the AI translation modal uses it to populate the target language dropdown.
+
+## AI Features
+
+AI features are enabled by passing providers to `ContentKitProvider`.
+
+### EditorProviders Interface
+
+```typescript
+interface EditorProviders {
+  llm?: LLMProvider;                    // Required for AI features
+  imageUpload?: ImageUploadProvider;    // Image upload
+  cleanupContent?: (content: any, options: CleanupOptions) => Promise<{ blocks: any[]; changes: string[] }>;
+  translateContent?: (content: any, sourceLang: string, targetLang: string) => Promise<{ blocks: any[]; title?: string }>;
+  importContent?: (url: string) => Promise<{ blocks: any[]; title?: string }>;
+  importFile?: (file: File) => Promise<{ blocks: any[]; title?: string }>;
+  searchDocuments?: (query: string) => Promise<DocumentSearchResult[]>;
+  onNotify?: (message: string, type: 'info' | 'success' | 'warning' | 'error') => void;
+}
+```
+
+### AI Provider Example (Anthropic Claude)
+
+```tsx
+import Anthropic from '@anthropic-ai/sdk';
+
+const anthropic = new Anthropic();
+
+const providers: EditorProviders = {
+  llm: {
+    generateText: async (prompt, options) => {
+      const res = await anthropic.messages.create({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: options?.maxTokens ?? 4096,
+        system: options?.systemPrompt,
+        messages: [{ role: 'user', content: prompt }],
+      });
+      return res.content[0].type === 'text' ? res.content[0].text : '';
+    },
+  },
+
+  cleanupContent: async (content, options) => {
+    // Send content to your AI backend for cleanup
+    const res = await fetch('/api/cleanup', {
+      method: 'POST',
+      body: JSON.stringify({ content, options }),
+    });
+    return res.json(); // { blocks: [...], changes: [...] }
+  },
+
+  translateContent: async (content, sourceLang, targetLang) => {
+    const res = await fetch('/api/translate', {
+      method: 'POST',
+      body: JSON.stringify({ content, sourceLang, targetLang }),
+    });
+    return res.json(); // { blocks: [...], title?: "..." }
+  },
+};
+
+<ContentKitProvider locale="en" providers={providers}>
+  <ContentKitEditor content={content} onChange={setContent} />
+</ContentKitProvider>
+```
+
+### Image Upload
+
+Via provider:
+
+```tsx
+const providers: EditorProviders = {
+  imageUpload: {
+    upload: async (file: File) => {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      const { url } = await res.json();
+      return url; // Return the URL of the uploaded image
+    },
+  },
+};
+```
+
+Or via the `onImageUpload` prop on `ContentKitEditor`:
+
+```tsx
+<ContentKitEditor
+  onImageUpload={async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const res = await fetch('/api/upload', { method: 'POST', body: formData });
+    const { url } = await res.json();
+    return url;
+  }}
+/>
+```
+
+## Editor Features
+
+### Rich Toolbar
+
+Formatting (bold, italic, underline, strikethrough), headings (H1--H4), text alignment, ordered/unordered lists, task lists, code blocks, blockquotes, horizontal rules, images, links, anchors, and special blocks.
+
+### Table Editing
+
+Insert tables, add/remove rows and columns, merge/split cells, toggle header rows/columns, and resize columns.
+
+### Code Blocks
+
+Syntax highlighting powered by lowlight with 27 supported languages. Includes a language selector dropdown in each code block.
+
+### AI Assistant
+
+- **Translation** -- 7 languages supported
+- **Content cleanup** -- Restructure, reformat, summarize, add callouts
+- **URL import** -- Import content from any URL
+- **File import** -- Import from uploaded files
+
+### Special Blocks
+
+Feature card, product showcase, file list, doc list, and more structured content blocks.
+
+### Dark Mode
+
+Add the `dark` class to a parent element:
+
+```html
+<div class="dark">
+  <ContentKitProvider locale="en" providers={{}}>
+    <ContentKitEditor content={content} onChange={setContent} />
+  </ContentKitProvider>
+</div>
+```
+
+The editor uses CSS variables for theming, so it adapts automatically.
+
+### i18n
+
+Built-in support for English (`en`) and Korean (`ko`). Add custom locales:
+
+```tsx
+<ContentKitProvider
+  locale="ja"
+  messages={{
+    ja: {
+      'toolbar.bold': '\u592A\u5B57',
+      'toolbar.italic': '\u659C\u4F53',
+      // ... see i18n/en.ts for all keys
+    },
+  }}
+  supportedLocales={[
+    { code: 'en', label: 'English' },
+    { code: 'ko', label: '\uD55C\uAD6D\uC5B4' },
+    { code: 'ja', label: '\u65E5\u672C\u8A9E' },
+  ]}
+>
+  <ContentKitEditor content={content} onChange={setContent} />
+</ContentKitProvider>
 ```
 
 ## Quick Start
@@ -179,11 +481,13 @@ const embedUrl = buildFigmaEmbedUrl(info, 'my-app');
 ### Subpath Exports
 
 | Import Path | Contents |
-|---|---|
+| ----------- | -------- |
+| `tiptap-content-kit/editor` | `ContentKitEditor`, `MultiLocaleEditor`, `ContentKitProvider`, `EditorToolbar`, `TableControls`, `SmartLinkModal`, `AnchorModal`, `DiagramEditModal`, `AIImportModal`, `SpecialBlockExtension`, `Tooltip`, `IconPicker`, i18n utilities, and all editor types |
+| `tiptap-content-kit/editor/style.css` | Editor stylesheet (required for the editor component) |
 | `tiptap-content-kit/parsers` | `parseFile`, `markdownToBlocks`, `docxHtmlToBlocks`, `parseConfluenceContent`, `parseConfluenceStorageToMarkdown`, and more |
 | `tiptap-content-kit/schema` | `BLOCK_TYPES`, `DocumentBlock`, `sanitizeBlock`, `isValidBlockType`, `validateAIOutput` |
-| `tiptap-content-kit/extensions` | React 버전: `CalloutExtension`, `DiagramExtension`, `CodeBlockTabsExtension`, `HtmlEmbedExtension`, `EmbedExtension`, `ResizableImage`, `YoutubeEmbed`, `AnchorExtension`, `DocumentLinkList`, `MarkdownShortcuts` |
-| `tiptap-content-kit/extensions-vue` | Vue 3 버전: 위와 동일한 extensions (Vue 3 + @tiptap/vue-3 기반) |
+| `tiptap-content-kit/extensions` | React: `CalloutExtension`, `DiagramExtension`, `CodeBlockTabsExtension`, `HtmlEmbedExtension`, `EmbedExtension`, `ResizableImage`, `YoutubeEmbed`, `AnchorExtension`, `DocumentLinkList`, `MarkdownShortcuts` |
+| `tiptap-content-kit/extensions-vue` | Vue 3: Same extensions as above (Vue 3 + @tiptap/vue-3) |
 | `tiptap-content-kit/utils` | `sanitizeHtmlForEmbed`, `parseFigmaUrl`, `buildFigmaEmbedUrl` |
 | `tiptap-content-kit/providers` | `ContentKitConfig`, `ConfluenceConfig`, `LLMProvider`, `StorageProvider` |
 
@@ -199,7 +503,7 @@ Plus 4 special block types for landing pages:
 
 ## Configuration
 
-Use the `ContentKitConfig` interface to wire up external services. All providers are optional -- configure only what you need.
+Use the `ContentKitConfig` interface to wire up external services for parsers and server-side usage. All providers are optional.
 
 ```typescript
 import type { ContentKitConfig } from 'tiptap-content-kit/providers';
@@ -217,7 +521,6 @@ const config: ContentKitConfig = {
 const config: ContentKitConfig = {
   confluence: {
     getCredentials: async (userId: string) => {
-      // Fetch from your OAuth token store
       const token = await db.getConfluenceToken(userId);
       return {
         accessToken: token.access_token,
@@ -232,6 +535,8 @@ const config: ContentKitConfig = {
 ### LLM Provider
 
 The `LLMProvider` interface works with **any LLM** -- OpenAI, Anthropic Claude, Google Gemini, Ollama, or any other provider. Just implement the `generateText` function.
+
+For editor-level AI features (translation, cleanup, import), see the [AI Features](#ai-features) section.
 
 #### OpenAI
 
@@ -349,7 +654,7 @@ const config: ContentKitConfig = {
 ## Supported File Types
 
 | Format | Extension | MIME Type | Parser |
-|---|---|---|---|
+| ------ | --------- | --------- | ------ |
 | Markdown | `.md`, `.mdx` | `text/markdown` | `markdownToBlocks` |
 | Word (OOXML) | `.docx` | `application/vnd.openxmlformats-officedocument.wordprocessingml.document` | `mammoth` + `docxHtmlToBlocks` |
 | Word (Legacy) | `.doc` | `application/msword` | `word-extractor` |
@@ -379,9 +684,10 @@ npm run dev
 
 **Key notes for contributors:**
 
-- All peer dependencies (`@tiptap/core`, `@tiptap/react`, `mermaid`, etc.) are installed automatically as `devDependencies` for the build — you don't need to install them separately.
+- All peer dependencies (`@tiptap/core`, `@tiptap/react`, `mermaid`, etc.) are installed automatically as `devDependencies` for the build -- you don't need to install them separately.
 - When adding new parsers, export them from `src/parsers/index.ts`.
 - When adding new extensions, export them from `src/extensions/index.ts` (React) and `src/extensions-vue/index.ts` (Vue 3).
+- Editor components go in `src/editor/` and are exported from `src/editor/index.ts`.
 - Block types must be registered in `src/schema/block-schema.ts` (`BLOCK_TYPES` array).
 - Please run `npm run typecheck` before submitting a PR to ensure zero type errors.
 
@@ -391,4 +697,4 @@ This project was developed with the assistance of [Claude Code](https://claude.a
 
 ## License
 
-MIT — see [LICENSE](./LICENSE) for details.
+MIT -- see [LICENSE](./LICENSE) for details.

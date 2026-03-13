@@ -1,0 +1,475 @@
+/* ── Content Kit Editor Variables ── */
+:root {
+  --ck-primary: #437dfc;
+  --ck-primary-hover: #3366e6;
+  --ck-primary-light: rgba(67, 125, 252, 0.1);
+  --ck-text-primary: #15171e;
+  --ck-text-secondary: rgba(21, 23, 30, 0.7);
+  --ck-text-muted: rgba(39, 39, 42, 0.3);
+  --ck-bg-primary: #ffffff;
+  --ck-bg-secondary: #f9fafb;
+  --ck-bg-card: #ffffff;
+  --ck-border: #e5e7eb;
+  --ck-hover-bg: rgba(0, 0, 0, 0.04);
+}
+
+.dark {
+  --ck-primary: #437dfc;
+  --ck-primary-hover: #5a91ff;
+  --ck-primary-light: rgba(67, 125, 252, 0.15);
+  --ck-text-primary: #ffffff;
+  --ck-text-secondary: rgba(255, 255, 255, 0.7);
+  --ck-text-muted: rgba(255, 255, 255, 0.3);
+  --ck-bg-primary: #111827;
+  --ck-bg-secondary: #1f2937;
+  --ck-bg-card: #1f2937;
+  --ck-border: #374151;
+  --ck-hover-bg: rgba(255, 255, 255, 0.06);
+}
+
+/* ── ProseMirror Base ── */
+.ck-editor .ProseMirror {
+  outline: none;
+  min-height: 300px;
+  padding: 16px 24px;
+}
+
+.ck-editor .ProseMirror > *:first-child {
+  margin-top: 0;
+}
+
+/* ── Typography ── */
+.ck-editor .ProseMirror h1 {
+  font-size: 2em;
+  font-weight: 700;
+  margin: 1.5em 0 0.5em;
+  line-height: 1.2;
+  color: var(--ck-text-primary);
+}
+
+.ck-editor .ProseMirror h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin: 1.25em 0 0.5em;
+  line-height: 1.3;
+  color: var(--ck-text-primary);
+}
+
+.ck-editor .ProseMirror h3 {
+  font-size: 1.25em;
+  font-weight: 600;
+  margin: 1em 0 0.5em;
+  line-height: 1.4;
+  color: var(--ck-text-primary);
+}
+
+.ck-editor .ProseMirror p {
+  margin: 0.5em 0;
+  line-height: 1.7;
+}
+
+.ck-editor .ProseMirror ul,
+.ck-editor .ProseMirror ol {
+  padding-left: 1.5em;
+  margin: 0.5em 0;
+}
+
+.ck-editor .ProseMirror li {
+  margin: 0.25em 0;
+}
+
+.ck-editor .ProseMirror li p {
+  margin: 0;
+}
+
+/* ── Code ── */
+.ck-editor .ProseMirror code {
+  font-family: 'SF Mono', 'Fira Code', Menlo, Consolas, monospace;
+  background: var(--ck-bg-secondary);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.ck-editor .ProseMirror pre {
+  background: var(--ck-bg-secondary);
+  border: 1px solid var(--ck-border);
+  border-radius: 8px;
+  padding: 1em 1.25em;
+  margin: 0.75em 0;
+  overflow-x: auto;
+}
+
+.ck-editor .ProseMirror pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.875em;
+  line-height: 1.6;
+  color: var(--ck-text-primary);
+}
+
+/* ── Blockquote ── */
+.ck-editor .ProseMirror blockquote {
+  border-left: 3px solid var(--ck-primary);
+  padding: 0.5em 1em;
+  margin: 0.75em 0;
+  color: var(--ck-text-secondary);
+}
+
+.ck-editor .ProseMirror blockquote p {
+  margin: 0;
+}
+
+/* ── Horizontal Rule ── */
+.ck-editor .ProseMirror hr {
+  border: none;
+  border-top: 1px solid var(--ck-border);
+  margin: 1.5em 0;
+}
+
+/* ── Table ── */
+.ck-editor .ProseMirror table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0.75em 0;
+  overflow: hidden;
+}
+
+.ck-editor .ProseMirror table td,
+.ck-editor .ProseMirror table th {
+  border: 1px solid var(--ck-border);
+  padding: 0.5em 0.75em;
+  vertical-align: top;
+  position: relative;
+  min-width: 100px;
+  word-break: break-word;
+}
+
+.ck-editor .ProseMirror table th {
+  font-weight: 600;
+  background: var(--ck-bg-secondary);
+}
+
+.ck-editor .ProseMirror .selectedCell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(67, 125, 252, 0.15);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.ck-editor .ProseMirror .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--ck-primary);
+  cursor: col-resize;
+  z-index: 10;
+}
+
+.ck-editor .ProseMirror .tableWrapper {
+  overflow-x: auto;
+  margin: 0.75em 0;
+}
+
+/* ── Placeholder ── */
+.ck-editor .ProseMirror p.is-editor-empty:first-child::before {
+  color: var(--ck-text-muted);
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* ── GapCursor ── */
+.ck-editor .ProseMirror-gapcursor {
+  display: none;
+  pointer-events: none;
+  position: relative;
+}
+
+.ck-editor .ProseMirror-gapcursor::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: -2px;
+  width: 20px;
+  border-top: 1px solid var(--ck-text-primary);
+  animation: ck-cursor-blink 1.1s steps(2, start) infinite;
+}
+
+.ck-editor .ProseMirror-focused .ProseMirror-gapcursor {
+  display: block;
+}
+
+@keyframes ck-cursor-blink {
+  to { visibility: hidden; }
+}
+
+/* ── Image ── */
+.ck-editor .ProseMirror img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ── Link ── */
+.ck-editor .ProseMirror a {
+  color: var(--ck-primary);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ── Task List ── */
+.ck-editor .ProseMirror ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 0;
+}
+
+.ck-editor .ProseMirror ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5em;
+}
+
+.ck-editor .ProseMirror ul[data-type="taskList"] li > label {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-top: 0.3em;
+}
+
+.ck-editor .ProseMirror ul[data-type="taskList"] li > label input[type="checkbox"] {
+  cursor: pointer;
+  width: 1em;
+  height: 1em;
+}
+
+.ck-editor .ProseMirror ul[data-type="taskList"] li > div {
+  flex: 1;
+}
+
+/* ── Syntax Highlighting ── */
+.ck-editor .ProseMirror pre code .hljs-comment,
+.ck-editor .ProseMirror pre code .hljs-quote {
+  color: #6a737d;
+  font-style: italic;
+}
+
+.ck-editor .ProseMirror pre code .hljs-keyword,
+.ck-editor .ProseMirror pre code .hljs-selector-tag,
+.ck-editor .ProseMirror pre code .hljs-type {
+  color: #d73a49;
+}
+
+.ck-editor .ProseMirror pre code .hljs-string,
+.ck-editor .ProseMirror pre code .hljs-addition {
+  color: #22863a;
+}
+
+.ck-editor .ProseMirror pre code .hljs-number,
+.ck-editor .ProseMirror pre code .hljs-literal {
+  color: #005cc5;
+}
+
+.ck-editor .ProseMirror pre code .hljs-built_in,
+.ck-editor .ProseMirror pre code .hljs-builtin-name {
+  color: #e36209;
+}
+
+.ck-editor .ProseMirror pre code .hljs-function .hljs-keyword {
+  color: #d73a49;
+}
+
+.ck-editor .ProseMirror pre code .hljs-title,
+.ck-editor .ProseMirror pre code .hljs-title.function_ {
+  color: #6f42c1;
+}
+
+.ck-editor .ProseMirror pre code .hljs-attr,
+.ck-editor .ProseMirror pre code .hljs-attribute {
+  color: #005cc5;
+}
+
+.ck-editor .ProseMirror pre code .hljs-variable,
+.ck-editor .ProseMirror pre code .hljs-template-variable {
+  color: #e36209;
+}
+
+.ck-editor .ProseMirror pre code .hljs-regexp {
+  color: #032f62;
+}
+
+.ck-editor .ProseMirror pre code .hljs-tag {
+  color: #22863a;
+}
+
+.ck-editor .ProseMirror pre code .hljs-name {
+  color: #22863a;
+}
+
+.ck-editor .ProseMirror pre code .hljs-selector-class,
+.ck-editor .ProseMirror pre code .hljs-selector-id {
+  color: #6f42c1;
+}
+
+.ck-editor .ProseMirror pre code .hljs-meta {
+  color: #005cc5;
+}
+
+.ck-editor .ProseMirror pre code .hljs-deletion {
+  color: #b31d28;
+  background: rgba(255, 0, 0, 0.1);
+}
+
+.ck-editor .ProseMirror pre code .hljs-addition {
+  background: rgba(0, 255, 0, 0.1);
+}
+
+/* Dark mode overrides */
+.dark .ck-editor .ProseMirror pre code .hljs-comment,
+.dark .ck-editor .ProseMirror pre code .hljs-quote {
+  color: #8b949e;
+}
+
+.dark .ck-editor .ProseMirror pre code .hljs-keyword,
+.dark .ck-editor .ProseMirror pre code .hljs-selector-tag,
+.dark .ck-editor .ProseMirror pre code .hljs-type {
+  color: #ff7b72;
+}
+
+.dark .ck-editor .ProseMirror pre code .hljs-string,
+.dark .ck-editor .ProseMirror pre code .hljs-addition {
+  color: #7ee787;
+}
+
+.dark .ck-editor .ProseMirror pre code .hljs-number,
+.dark .ck-editor .ProseMirror pre code .hljs-literal {
+  color: #79c0ff;
+}
+
+.dark .ck-editor .ProseMirror pre code .hljs-built_in,
+.dark .ck-editor .ProseMirror pre code .hljs-builtin-name {
+  color: #ffa657;
+}
+
+.dark .ck-editor .ProseMirror pre code .hljs-title,
+.dark .ck-editor .ProseMirror pre code .hljs-title.function_ {
+  color: #d2a8ff;
+}
+
+.dark .ck-editor .ProseMirror pre code .hljs-attr,
+.dark .ck-editor .ProseMirror pre code .hljs-attribute {
+  color: #79c0ff;
+}
+
+.dark .ck-editor .ProseMirror pre code .hljs-variable,
+.dark .ck-editor .ProseMirror pre code .hljs-template-variable {
+  color: #ffa657;
+}
+
+.dark .ck-editor .ProseMirror pre code .hljs-regexp {
+  color: #a5d6ff;
+}
+
+.dark .ck-editor .ProseMirror pre code .hljs-tag {
+  color: #7ee787;
+}
+
+.dark .ck-editor .ProseMirror pre code .hljs-name {
+  color: #7ee787;
+}
+
+.dark .ck-editor .ProseMirror pre code .hljs-selector-class,
+.dark .ck-editor .ProseMirror pre code .hljs-selector-id {
+  color: #d2a8ff;
+}
+
+.dark .ck-editor .ProseMirror pre code .hljs-meta {
+  color: #79c0ff;
+}
+
+.dark .ck-editor .ProseMirror pre code .hljs-deletion {
+  color: #ffa198;
+  background: rgba(255, 0, 0, 0.15);
+}
+
+.dark .ck-editor .ProseMirror pre code .hljs-addition {
+  background: rgba(0, 255, 0, 0.15);
+}
+
+/* ── Code Block Language Selector ── */
+.ck-editor .ProseMirror .code-block-with-lang {
+  position: relative;
+}
+
+.ck-editor .ProseMirror .code-block-lang-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 10;
+}
+
+.ck-editor .ProseMirror .code-block-lang-btn {
+  padding: 1px 8px;
+  font-size: 0.7em;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: var(--ck-text-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.15s;
+  line-height: 1.6;
+}
+
+.ck-editor .ProseMirror .code-block-lang-btn:hover {
+  color: var(--ck-text-secondary);
+  background: var(--ck-hover-bg);
+  border-color: var(--ck-border);
+}
+
+.ck-editor .ProseMirror .code-block-lang-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 2px;
+  background: var(--ck-bg-primary);
+  border: 1px solid var(--ck-border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-height: 240px;
+  overflow-y: auto;
+  min-width: 130px;
+  padding: 4px;
+  z-index: 50;
+}
+
+.ck-editor .ProseMirror .code-block-lang-option {
+  display: block;
+  width: 100%;
+  padding: 4px 10px;
+  text-align: left;
+  font-size: 0.8em;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: var(--ck-text-primary);
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.ck-editor .ProseMirror .code-block-lang-option:hover {
+  background: var(--ck-hover-bg);
+}
+
+.ck-editor .ProseMirror .code-block-lang-option.active {
+  color: var(--ck-primary);
+  font-weight: 600;
+}

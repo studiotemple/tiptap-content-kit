@@ -1,7 +1,7 @@
 {
   "name": "tiptap-content-kit",
-  "version": "0.1.0",
-  "description": "Production-hardened content parsers, Tiptap extensions, and utilities for converting Markdown, DOCX, Confluence, and more into Tiptap-compatible blocks.",
+  "version": "0.3.1",
+  "description": "Full-featured Tiptap editor with rich toolbar, table controls, AI assistant, special blocks, i18n, and content parsers.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -42,7 +42,13 @@
       "types": "./dist/providers.d.ts",
       "import": "./dist/providers.js",
       "require": "./dist/providers.cjs"
-    }
+    },
+    "./editor": {
+      "types": "./dist/editor.d.ts",
+      "import": "./dist/editor.js",
+      "require": "./dist/editor.cjs"
+    },
+    "./editor/style.css": "./dist/editor.css"
   },
   "files": [
     "dist",
@@ -56,13 +62,28 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@tiptap/extension-code-block-lowlight": "^3.20.1",
     "cheerio": "^1.0.0",
     "entities": "^6.0.0",
+    "lowlight": "^3.3.0",
     "uuid": "^11.1.0"
   },
   "peerDependencies": {
     "@tiptap/core": ">=2.0.0",
+    "@tiptap/extension-image": ">=2.0.0",
+    "@tiptap/extension-link": ">=2.0.0",
+    "@tiptap/extension-placeholder": ">=2.0.0",
+    "@tiptap/extension-table": ">=2.0.0",
+    "@tiptap/extension-table-cell": ">=2.0.0",
+    "@tiptap/extension-table-header": ">=2.0.0",
+    "@tiptap/extension-table-row": ">=2.0.0",
+    "@tiptap/extension-task-item": ">=2.0.0",
+    "@tiptap/extension-code-block-lowlight": ">=2.0.0",
+    "@tiptap/extension-task-list": ">=2.0.0",
+    "@tiptap/extension-text-align": ">=2.0.0",
+    "@tiptap/extension-underline": ">=2.0.0",
     "@tiptap/react": ">=2.0.0",
+    "@tiptap/starter-kit": ">=2.0.0",
     "@tiptap/vue-3": ">=2.0.0",
     "mammoth": ">=1.0.0",
     "mermaid": ">=10.0.0",
@@ -77,6 +98,45 @@
       "optional": true
     },
     "@tiptap/react": {
+      "optional": true
+    },
+    "@tiptap/starter-kit": {
+      "optional": true
+    },
+    "@tiptap/extension-underline": {
+      "optional": true
+    },
+    "@tiptap/extension-text-align": {
+      "optional": true
+    },
+    "@tiptap/extension-table": {
+      "optional": true
+    },
+    "@tiptap/extension-table-row": {
+      "optional": true
+    },
+    "@tiptap/extension-table-cell": {
+      "optional": true
+    },
+    "@tiptap/extension-table-header": {
+      "optional": true
+    },
+    "@tiptap/extension-link": {
+      "optional": true
+    },
+    "@tiptap/extension-image": {
+      "optional": true
+    },
+    "@tiptap/extension-placeholder": {
+      "optional": true
+    },
+    "@tiptap/extension-task-list": {
+      "optional": true
+    },
+    "@tiptap/extension-task-item": {
+      "optional": true
+    },
+    "@tiptap/extension-code-block-lowlight": {
       "optional": true
     },
     "@tiptap/vue-3": {
@@ -106,16 +166,31 @@
   },
   "devDependencies": {
     "@tiptap/core": "^2.11.5",
+    "@tiptap/extension-image": "^2.11.5",
+    "@tiptap/extension-link": "^2.11.5",
+    "@tiptap/extension-placeholder": "^2.11.5",
+    "@tiptap/extension-table": "^2.11.5",
+    "@tiptap/extension-table-cell": "^2.11.5",
+    "@tiptap/extension-table-header": "^2.11.5",
+    "@tiptap/extension-table-row": "^2.11.5",
+    "@tiptap/extension-task-item": "^2.11.5",
+    "@tiptap/extension-task-list": "^2.11.5",
+    "@tiptap/extension-text-align": "^2.11.5",
+    "@tiptap/extension-underline": "^2.11.5",
     "@tiptap/react": "^2.11.5",
+    "@tiptap/starter-kit": "^2.11.5",
     "@tiptap/vue-3": "^2.11.5",
     "@types/node": "^22.0.0",
     "@types/pdf-parse": "^1.1.4",
     "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "@types/uuid": "^10.0.0",
     "mammoth": "^1.9.0",
     "mermaid": "^11.0.0",
-    "vue": "^3.5.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "tsup": "^8.0.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vue": "^3.5.0"
   }
 }
