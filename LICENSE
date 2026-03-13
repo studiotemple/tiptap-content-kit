@@ -31,3 +31,6 @@ rich-text editor framework. Tiptap is open-sourced under the MIT License:
 
 Tiptap itself is built on [ProseMirror](https://prosemirror.net/) by Marijn
 Haverbeke, also licensed under the MIT License.
+
+This project was developed with the assistance of Claude Code,
+an AI-powered coding agent by Anthropic (https://anthropic.com).

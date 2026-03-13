@@ -385,6 +385,10 @@ npm run dev
 - Block types must be registered in `src/schema/block-schema.ts` (`BLOCK_TYPES` array).
 - Please run `npm run typecheck` before submitting a PR to ensure zero type errors.
 
+## Built with Claude Code
+
+This project was developed with the assistance of [Claude Code](https://claude.ai/), Anthropic's AI-powered coding agent.
+
 ## License
 
 MIT — see [LICENSE](./LICENSE) for details.
