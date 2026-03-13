@@ -118,7 +118,7 @@ export const CalloutExtension = Node.create({
     ];
   },
 
-  renderHTML({ HTMLAttributes }) {
+  renderHTML({ HTMLAttributes }: { HTMLAttributes: Record<string, any> }) {
     return ['div', mergeAttributes(HTMLAttributes, { 'data-callout': '' }), 0];
   },
 
@@ -132,7 +132,7 @@ export const CalloutExtension = Node.create({
 
   addKeyboardShortcuts() {
     return {
-      Backspace: ({ editor }) => {
+      Backspace: ({ editor }: { editor: any }) => {
         const { $from } = editor.state.selection;
         if ($from.parentOffset !== 0) return false;
         const calloutNode = $from.node(-1);

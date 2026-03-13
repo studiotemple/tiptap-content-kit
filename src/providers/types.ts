@@ -35,14 +35,8 @@ export interface StorageProvider {
   upload: (buffer: Buffer, key: string, contentType: string) => Promise<string>;
 }
 
-export interface GitHubConfig {
-  token: string;
-  enterpriseHost?: string;
-}
-
 export interface ContentKitConfig {
   confluence?: ConfluenceConfig;
   llm?: LLMProvider;
   storage?: StorageProvider;
-  github?: GitHubConfig;
 }

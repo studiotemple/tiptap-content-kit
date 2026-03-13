@@ -237,7 +237,7 @@ export const CodeBlockTabsExtension = Node.create({
     ];
   },
 
-  renderHTML({ HTMLAttributes }) {
+  renderHTML({ HTMLAttributes }: { HTMLAttributes: Record<string, any> }) {
     return ['div', mergeAttributes(HTMLAttributes, { 'data-code-block-tabs': '' })];
   },
 

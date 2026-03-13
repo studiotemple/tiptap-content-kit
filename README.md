@@ -2,8 +2,9 @@
 
 Production-hardened content parsers and Tiptap extensions for converting Markdown, DOCX, PDF, Confluence, and more into Tiptap-compatible document blocks.
 
-<!-- [![npm version](https://img.shields.io/npm/v/tiptap-content-kit)](https://www.npmjs.com/package/tiptap-content-kit) -->
-<!-- [![license](https://img.shields.io/npm/l/tiptap-content-kit)](./LICENSE) -->
+[![npm version](https://img.shields.io/npm/v/tiptap-content-kit)](https://www.npmjs.com/package/tiptap-content-kit)
+[![license](https://img.shields.io/npm/l/tiptap-content-kit)](./LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)](https://www.typescriptlang.org/)
 
 ## Features
 
@@ -347,6 +348,34 @@ const config: ContentKitConfig = {
 | Plain Text | `.txt`, `.text` | `text/plain` | Built-in |
 | Confluence | -- | Storage Format XHTML | `parseConfluenceContent` / `parseConfluenceStorageToMarkdown` |
 
+## Contributing
+
+Contributions are welcome! Here's how to get started:
+
+```bash
+# 1. Clone the repo and install all dependencies (including devDependencies)
+git clone https://github.com/studiotemple/tiptap-content-kit.git
+cd tiptap-content-kit
+npm install
+
+# 2. Run the build
+npm run build
+
+# 3. Run TypeScript type checking
+npm run typecheck
+
+# 4. Watch mode for development
+npm run dev
+```
+
+**Key notes for contributors:**
+
+- All peer dependencies (`@tiptap/core`, `@tiptap/react`, `mermaid`, etc.) are installed automatically as `devDependencies` for the build — you don't need to install them separately.
+- When adding new parsers, export them from `src/parsers/index.ts`.
+- When adding new extensions, export them from `src/extensions/index.ts`.
+- Block types must be registered in `src/schema/block-schema.ts` (`BLOCK_TYPES` array).
+- Please run `npm run typecheck` before submitting a PR to ensure zero type errors.
+
 ## License
 
-MIT
+MIT — see [LICENSE](./LICENSE) for details.

@@ -67,11 +67,9 @@ async function parsePDF(buffer: Buffer): Promise<string> {
   }
 
   try {
-    const { PDFParse } = await import('pdf-parse');
-    const pdf = new PDFParse({ data: new Uint8Array(buffer) });
-    const textResult = await pdf.getText();
-    await pdf.destroy();
-    return textResult.text || '';
+    const pdfParse = (await import('pdf-parse')).default;
+    const result = await pdfParse(buffer);
+    return result.text || '';
   } catch (err: any) {
     throw new Error(`PDF 파싱 실패: ${err.message || '파일을 읽을 수 없습니다.'}`);
   }

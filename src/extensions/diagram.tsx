@@ -264,7 +264,7 @@ export const DiagramExtension = Node.create({
     return [
       {
         tag: 'div[data-diagram-block]',
-        getAttrs: (element) => {
+        getAttrs: (element: HTMLElement | string) => {
           if (typeof element === 'string') return false;
           const diagramType =
             element.getAttribute('data-diagram-type') || 'mermaid';

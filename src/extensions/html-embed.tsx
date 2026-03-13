@@ -189,7 +189,7 @@ export const HtmlEmbedExtension = Node.create({
     return [
       {
         tag: 'div[data-html-embed]',
-        getAttrs: (element) => {
+        getAttrs: (element: HTMLElement | string) => {
           if (typeof element === 'string') return false;
           return {
             htmlContent: element.getAttribute('data-html-content') || '',
@@ -200,7 +200,7 @@ export const HtmlEmbedExtension = Node.create({
     ];
   },
 
-  renderHTML({ HTMLAttributes }) {
+  renderHTML({ HTMLAttributes }: { HTMLAttributes: Record<string, any> }) {
     return [
       'div',
       mergeAttributes(this.options.HTMLAttributes, {

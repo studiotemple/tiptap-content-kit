@@ -98,7 +98,7 @@ export const YoutubeEmbed = Node.create({
     return [
       {
         tag: 'div[data-youtube-video]',
-        getAttrs: (element) => {
+        getAttrs: (element: HTMLElement | string) => {
           if (typeof element === 'string') return false;
           const videoId = element.getAttribute('data-video-id');
           return videoId ? { videoId } : false;
@@ -107,7 +107,7 @@ export const YoutubeEmbed = Node.create({
     ];
   },
 
-  renderHTML({ HTMLAttributes }) {
+  renderHTML({ HTMLAttributes }: { HTMLAttributes: Record<string, any> }) {
     const { videoId, width, height } = HTMLAttributes;
     return [
       'div',

@@ -28,6 +28,11 @@
       "import": "./dist/extensions.js",
       "require": "./dist/extensions.cjs"
     },
+    "./extensions-vue": {
+      "types": "./dist/extensions-vue.d.ts",
+      "import": "./dist/extensions-vue.js",
+      "require": "./dist/extensions-vue.cjs"
+    },
     "./utils": {
       "types": "./dist/utils.d.ts",
       "import": "./dist/utils.js",
@@ -39,7 +44,11 @@
       "require": "./dist/providers.cjs"
     }
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -54,27 +63,59 @@
   "peerDependencies": {
     "@tiptap/core": ">=2.0.0",
     "@tiptap/react": ">=2.0.0",
+    "@tiptap/vue-3": ">=2.0.0",
     "mammoth": ">=1.0.0",
     "mermaid": ">=10.0.0",
     "pdf-parse": ">=2.0.0",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0",
+    "vue": ">=3.0.0",
     "word-extractor": ">=1.0.0"
   },
   "peerDependenciesMeta": {
-    "@tiptap/core": { "optional": true },
-    "@tiptap/react": { "optional": true },
-    "mammoth": { "optional": true },
-    "mermaid": { "optional": true },
-    "pdf-parse": { "optional": true },
-    "react": { "optional": true },
-    "react-dom": { "optional": true },
-    "word-extractor": { "optional": true }
+    "@tiptap/core": {
+      "optional": true
+    },
+    "@tiptap/react": {
+      "optional": true
+    },
+    "@tiptap/vue-3": {
+      "optional": true
+    },
+    "mammoth": {
+      "optional": true
+    },
+    "mermaid": {
+      "optional": true
+    },
+    "pdf-parse": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    },
+    "word-extractor": {
+      "optional": true
+    }
   },
   "devDependencies": {
-    "tsup": "^8.0.0",
-    "typescript": "^5.0.0",
+    "@tiptap/core": "^2.11.5",
+    "@tiptap/react": "^2.11.5",
+    "@tiptap/vue-3": "^2.11.5",
+    "@types/node": "^22.0.0",
+    "@types/pdf-parse": "^1.1.4",
     "@types/react": "^19.0.0",
-    "@types/uuid": "^10.0.0"
+    "@types/uuid": "^10.0.0",
+    "mammoth": "^1.9.0",
+    "mermaid": "^11.0.0",
+    "vue": "^3.5.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.9.3"
   }
 }

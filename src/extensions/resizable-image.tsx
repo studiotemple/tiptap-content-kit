@@ -265,7 +265,7 @@ export const ResizableImage = Node.create({
     ];
   },
 
-  renderHTML({ HTMLAttributes }) {
+  renderHTML({ HTMLAttributes }: { HTMLAttributes: Record<string, any> }) {
     const { width, ...attrs } = HTMLAttributes;
     return [
       'img',

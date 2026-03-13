@@ -74,7 +74,7 @@ export const AnchorExtension = Node.create({
     ];
   },
 
-  renderHTML({ HTMLAttributes }) {
+  renderHTML({ HTMLAttributes }: { HTMLAttributes: Record<string, any> }) {
     return ['span', mergeAttributes(HTMLAttributes, { 'data-anchor-point': '' }), 0];
   },
 
