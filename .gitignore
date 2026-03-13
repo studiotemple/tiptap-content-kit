@@ -2,3 +2,5 @@ node_modules/
 dist/
 *.tsbuildinfo
 .npmrc
+.DS_Store
+docs/work-sessions/
