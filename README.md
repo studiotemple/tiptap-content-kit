@@ -22,6 +22,7 @@ Full-featured Tiptap editor with rich toolbar, AI assistant, table controls, spe
 - [Features](#features)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
+- [AI Demo Prompt](#ai-demo-prompt)
 - [Configuration](#configuration)
 - [Editor Features](#editor-features)
 - [Parsers](#parsers)
@@ -187,6 +188,67 @@ Each tab shows a colored dot: green when the locale has content, gray when empty
 | ...other | | | All `ContentKitEditor` props are passed through |
 
 > **Note:** Pass `supportedLocales` to `ContentKitProvider` as well -- the AI translation modal uses it to populate the target language dropdown.
+
+## AI Demo Prompt
+
+Want to quickly try tiptap-content-kit with AI features? Copy the prompt below and paste it into your AI coding assistant (Claude Code, Cursor, Copilot, etc.). Adjust the optional values to match your setup.
+
+<details>
+<summary><strong>Prompt Template (click to expand)</strong></summary>
+
+````
+Create a React demo app using tiptap-content-kit with full AI features.
+
+## Requirements
+- Use Vite + React + TypeScript
+- Install tiptap-content-kit and all editor peer dependencies
+- Include AI-powered translation, content cleanup, and URL import
+
+## Optional Configuration (adjust as needed)
+- AI_PROVIDER: "anthropic"  # "anthropic" | "openai" | "gemini" | "ollama"
+- AI_MODEL: "claude-haiku-4-5-20251001"  # or "gpt-4o-mini", "gemini-2.0-flash", "llama3"
+- AI_API_KEY: env variable VITE_AI_API_KEY  # set in .env file
+- SUPPORTED_LOCALES: ["en", "ko", "ja"]  # language codes for translation
+- LOCALE_LABELS: ["English", "한국어", "日本語"]  # display labels
+
+## App Structure
+
+### 1. Environment (.env)
+VITE_AI_API_KEY=your-api-key-here
+
+### 2. AI Provider (src/ai-provider.ts)
+Create a provider that:
+- Calls the AI API via a Vite proxy (to avoid CORS / exposing keys)
+- Implements `llm.generateText(prompt, options)` returning a string
+- Implements `cleanupContent(content, options)` returning `{ blocks, changes }`
+- Implements `translateContent(content, sourceLang, targetLang)` returning `{ blocks, title? }`
+- All AI responses should return Tiptap JSON nodes
+
+### 3. Vite Proxy (vite.config.ts)
+Proxy `/api/ai` to the AI provider's API endpoint, injecting the API key
+from the server-side environment variable so it's never exposed to the client.
+
+### 4. App Component (src/App.tsx)
+```tsx
+import { ContentKitProvider, MultiLocaleEditor } from 'tiptap-content-kit/editor';
+import 'tiptap-content-kit/editor/style.css';
+
+// Use MultiLocaleEditor with:
+// - Locale tabs based on SUPPORTED_LOCALES config
+// - AI providers for translation, cleanup, import
+// - Dark mode toggle
+// - JSON output preview panel
+```
+
+### 5. Key Integration Points
+- Pass AI providers to `<ContentKitProvider providers={...}>`
+- Pass `supportedLocales` to ContentKitProvider for the AI translation dropdown
+- Pass matching `locales` to MultiLocaleEditor for tab display
+- Use `contents: Record<string, any>` state for multi-locale content
+- AI translation "Cross Tab" mode writes results to the target locale tab
+````
+
+</details>
 
 ## Configuration
 
