@@ -145,8 +145,36 @@ function ContentKitEditor({
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
       Table.configure({ resizable: true }),
       TableRow,
-      TableCell,
-      TableHeader,
+      TableCell.extend({
+        addAttributes() {
+          return {
+            ...this.parent?.(),
+            backgroundColor: {
+              default: null,
+              parseHTML: (element) => element.style.backgroundColor || null,
+              renderHTML: (attributes) => {
+                if (!attributes.backgroundColor) return {};
+                return { style: `background-color: ${attributes.backgroundColor}` };
+              },
+            },
+          };
+        },
+      }),
+      TableHeader.extend({
+        addAttributes() {
+          return {
+            ...this.parent?.(),
+            backgroundColor: {
+              default: null,
+              parseHTML: (element) => element.style.backgroundColor || null,
+              renderHTML: (attributes) => {
+                if (!attributes.backgroundColor) return {};
+                return { style: `background-color: ${attributes.backgroundColor}` };
+              },
+            },
+          };
+        },
+      }),
       Link.configure({ openOnClick: false }),
       Image,
       Placeholder.configure({ placeholder: placeholderText ?? t('editor.placeholder') }),
@@ -455,11 +483,10 @@ function ContentKitEditor({
             onOpenAIModal={providers.llm ? handleOpenAIModal : undefined}
             isUploading={isUploading}
           />
+          {/* Table controls -- inline bar below toolbar when cursor is in a table */}
+          {editor && <TableControls editor={editor} />}
         </div>
       )}
-
-      {/* Table controls -- inline bar below toolbar when cursor is in a table */}
-      {editor && <TableControls editor={editor} />}
 
       {/* Editor content area */}
       <EditorContent editor={editor} className={editorClassName} />

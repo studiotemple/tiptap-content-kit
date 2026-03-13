@@ -137,6 +137,7 @@ export default function TableControls({ editor }: TableControlsProps) {
               <button
                 key={label}
                 type="button"
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={() => applyBgColor(value)}
                 title={label}
                 className="w-6 h-6 rounded border border-gray-300 dark:border-gray-600 hover:ring-2 hover:ring-blue-400 transition-all"
