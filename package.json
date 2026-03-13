@@ -1,6 +1,6 @@
 {
   "name": "tiptap-content-kit",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Full-featured Tiptap editor with rich toolbar, table controls, AI assistant, special blocks, i18n, and content parsers.",
   "license": "MIT",
   "repository": {

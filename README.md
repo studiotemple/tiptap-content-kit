@@ -6,6 +6,33 @@ Full-featured Tiptap editor with rich toolbar, AI assistant, table controls, spe
 [![license](https://img.shields.io/npm/l/tiptap-content-kit)](./LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)](https://www.typescriptlang.org/)
 
+## Screenshots
+
+| Light Mode | Dark Mode |
+| :---: | :---: |
+| ![Light Mode](https://raw.githubusercontent.com/studiotemple/tiptap-content-kit/main/docs/screenshots/editor-light.png) | ![Dark Mode](https://raw.githubusercontent.com/studiotemple/tiptap-content-kit/main/docs/screenshots/editor-dark.png) |
+
+| Code Blocks & Syntax Highlighting | AI Assistant |
+| :---: | :---: |
+| ![Code Blocks](https://raw.githubusercontent.com/studiotemple/tiptap-content-kit/main/docs/screenshots/code-blocks.png) | ![AI Assistant](https://raw.githubusercontent.com/studiotemple/tiptap-content-kit/main/docs/screenshots/ai-assistant.png) |
+
+## Table of Contents
+
+- [Screenshots](#screenshots)
+- [Features](#features)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Configuration](#configuration)
+- [Editor Features](#editor-features)
+- [Parsers](#parsers)
+- [Extensions](#extensions)
+- [Schema & Validation](#schema--validation)
+- [Utilities](#utilities)
+- [API Reference](#api-reference)
+- [Supported File Types](#supported-file-types)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Features
 
 - **Rich Editor Component** -- Drop-in React editor with toolbar, table controls, code blocks, AI assistant, and special blocks
@@ -17,16 +44,6 @@ Full-featured Tiptap editor with rich toolbar, AI assistant, table controls, spe
 - **i18n** -- Built-in English and Korean, extensible to any language
 - **Utility functions** -- HTML sanitizer for sandboxed iframes, Figma URL parser with Embed Kit 2.0 support
 - **Provider interfaces** -- Plug in your own LLM, image upload, Confluence OAuth, and storage providers
-
-## Screenshots
-
-| Light Mode | Dark Mode |
-| :---: | :---: |
-| ![Light Mode](https://raw.githubusercontent.com/studiotemple/tiptap-content-kit/main/docs/screenshots/editor-light.png) | ![Dark Mode](https://raw.githubusercontent.com/studiotemple/tiptap-content-kit/main/docs/screenshots/editor-dark.png) |
-
-| Code Blocks & Syntax Highlighting | AI Assistant |
-| :---: | :---: |
-| ![Code Blocks](https://raw.githubusercontent.com/studiotemple/tiptap-content-kit/main/docs/screenshots/code-blocks.png) | ![AI Assistant](https://raw.githubusercontent.com/studiotemple/tiptap-content-kit/main/docs/screenshots/ai-assistant.png) |
 
 ## Installation
 
@@ -67,11 +84,11 @@ npm install pdf-parse
 npm install mermaid
 ```
 
-## Editor Component (React)
+## Quick Start
+
+### Basic Editor
 
 A batteries-included rich text editor built on Tiptap.
-
-### Basic Usage
 
 ```tsx
 import { ContentKitProvider, ContentKitEditor } from 'tiptap-content-kit/editor';
@@ -91,35 +108,11 @@ function MyEditor() {
 }
 ```
 
-### ContentKitEditor Props
-
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `content` | `any` (Tiptap JSON) | `undefined` | Initial editor content |
-| `onChange` | `(content: any) => void` | `undefined` | Called on content change |
-| `editable` | `boolean` | `true` | Enable/disable editing |
-| `placeholder` | `string` | `"Start writing..."` | Placeholder text |
-| `locale` | `string` | `"en"` | Editor UI language (en, ko) |
-| `className` | `string` | `undefined` | Additional CSS classes |
-| `onImageUpload` | `(file: File) => Promise<string>` | `undefined` | Image upload handler |
-| `extensions` | `any[]` | `[]` | Additional Tiptap extensions |
-| `toolbarClassName` | `string` | `undefined` | Toolbar wrapper CSS classes |
-| `editorClassName` | `string` | `undefined` | Editor content CSS classes |
-
-### ContentKitProvider Props
-
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `locale` | `string` | `"en"` | UI language |
-| `providers` | `EditorProviders` | `{}` | Service providers |
-| `messages` | `Record<string, EditorMessages>` | `{}` | Custom i18n messages |
-| `supportedLocales` | `EditorLocale[]` | `[{code:'en',...},{code:'ko',...}]` | Available locales |
-
-## Multi-Locale Editor
+### Multi-Locale Editor
 
 `MultiLocaleEditor` wraps `ContentKitEditor` with locale tabs. When only one locale is configured, no tabs are shown and it behaves like a single editor. When multiple locales are configured, each tab manages its own content independently.
 
-### Basic Usage (Single Editor -- No Tabs)
+#### Single Locale (No Tabs)
 
 ```tsx
 import { ContentKitProvider, MultiLocaleEditor } from 'tiptap-content-kit/editor';
@@ -142,7 +135,7 @@ function MyEditor() {
 }
 ```
 
-### Multi-Locale with Tabs
+#### Multiple Locales (With Tabs)
 
 ```tsx
 import { ContentKitProvider, MultiLocaleEditor } from 'tiptap-content-kit/editor';
@@ -181,7 +174,7 @@ function MyEditor() {
 
 Each tab shows a colored dot: green when the locale has content, gray when empty. AI translation with "Cross Tab" mode automatically writes the translated result into the target locale tab.
 
-### MultiLocaleEditor Props
+#### MultiLocaleEditor Props
 
 | Prop | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
@@ -195,9 +188,43 @@ Each tab shows a colored dot: green when the locale has content, gray when empty
 
 > **Note:** Pass `supportedLocales` to `ContentKitProvider` as well -- the AI translation modal uses it to populate the target language dropdown.
 
-## AI Features
+## Configuration
 
-AI features are enabled by passing providers to `ContentKitProvider`.
+Use the `ContentKitConfig` interface to wire up external services for parsers and server-side usage. All providers are optional.
+
+```typescript
+import type { ContentKitConfig } from 'tiptap-content-kit/providers';
+
+const config: ContentKitConfig = {
+  confluence: { ... },
+  llm: { ... },
+  storage: { ... },
+};
+```
+
+### ContentKitProvider Props
+
+| Prop | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `locale` | `string` | `"en"` | UI language |
+| `providers` | `EditorProviders` | `{}` | Service providers |
+| `messages` | `Record<string, EditorMessages>` | `{}` | Custom i18n messages |
+| `supportedLocales` | `EditorLocale[]` | `[{code:'en',...},{code:'ko',...}]` | Available locales |
+
+### ContentKitEditor Props
+
+| Prop | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `content` | `any` (Tiptap JSON) | `undefined` | Initial editor content |
+| `onChange` | `(content: any) => void` | `undefined` | Called on content change |
+| `editable` | `boolean` | `true` | Enable/disable editing |
+| `placeholder` | `string` | `"Start writing..."` | Placeholder text |
+| `locale` | `string` | `"en"` | Editor UI language (en, ko) |
+| `className` | `string` | `undefined` | Additional CSS classes |
+| `onImageUpload` | `(file: File) => Promise<string>` | `undefined` | Image upload handler |
+| `extensions` | `any[]` | `[]` | Additional Tiptap extensions |
+| `toolbarClassName` | `string` | `undefined` | Toolbar wrapper CSS classes |
+| `editorClassName` | `string` | `undefined` | Editor content CSS classes |
 
 ### EditorProviders Interface
 
@@ -214,7 +241,15 @@ interface EditorProviders {
 }
 ```
 
-### AI Provider Example (Anthropic Claude)
+### AI Provider Examples
+
+AI features are enabled by passing providers to `ContentKitProvider`.
+
+The `LLMProvider` interface works with **any LLM** -- OpenAI, Anthropic Claude, Google Gemini, Ollama, or any other provider. Just implement the `generateText` function.
+
+For editor-level AI features (translation, cleanup, import), see the [Editor Features](#editor-features) section.
+
+#### Anthropic Claude
 
 ```tsx
 import Anthropic from '@anthropic-ai/sdk';
@@ -257,6 +292,76 @@ const providers: EditorProviders = {
 </ContentKitProvider>
 ```
 
+#### OpenAI
+
+```typescript
+import OpenAI from 'openai';
+const openai = new OpenAI();
+
+const config: ContentKitConfig = {
+  llm: {
+    generateText: async (prompt, options) => {
+      const res = await openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        temperature: options?.temperature ?? 0.3,
+        max_tokens: options?.maxTokens,
+        messages: [
+          ...(options?.systemPrompt ? [{ role: 'system' as const, content: options.systemPrompt }] : []),
+          { role: 'user' as const, content: prompt },
+        ],
+      });
+      return res.choices[0]?.message?.content ?? '';
+    },
+  },
+};
+```
+
+#### Google Gemini
+
+```typescript
+import { GoogleGenAI } from '@google/genai';
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
+
+const config: ContentKitConfig = {
+  llm: {
+    generateText: async (prompt, options) => {
+      const res = await ai.models.generateContent({
+        model: 'gemini-2.0-flash',
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        config: {
+          systemInstruction: options?.systemPrompt,
+          temperature: options?.temperature ?? 0.3,
+          maxOutputTokens: options?.maxTokens,
+        },
+      });
+      return res.text ?? '';
+    },
+  },
+};
+```
+
+#### Ollama (Local)
+
+```typescript
+const config: ContentKitConfig = {
+  llm: {
+    generateText: async (prompt, options) => {
+      const res = await fetch('http://localhost:11434/api/generate', {
+        method: 'POST',
+        body: JSON.stringify({
+          model: 'llama3',
+          prompt: options?.systemPrompt ? `${options.systemPrompt}\n\n${prompt}` : prompt,
+          stream: false,
+          options: { temperature: options?.temperature ?? 0.3 },
+        }),
+      });
+      const data = await res.json();
+      return data.response;
+    },
+  },
+};
+```
+
 ### Image Upload
 
 Via provider:
@@ -287,6 +392,45 @@ Or via the `onImageUpload` prop on `ContentKitEditor`:
     return url;
   }}
 />
+```
+
+### Storage (S3)
+
+```typescript
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+
+const s3 = new S3Client({ region: 'us-east-1' });
+
+const config: ContentKitConfig = {
+  storage: {
+    upload: async (buffer, key, contentType) => {
+      await s3.send(new PutObjectCommand({
+        Bucket: 'my-uploads-bucket',
+        Key: `images/${key}`,
+        Body: buffer,
+        ContentType: contentType,
+      }));
+      return `https://my-uploads-bucket.s3.amazonaws.com/images/${key}`;
+    },
+  },
+};
+```
+
+### Confluence OAuth
+
+```typescript
+const config: ContentKitConfig = {
+  confluence: {
+    getCredentials: async (userId: string) => {
+      const token = await db.getConfluenceToken(userId);
+      return {
+        accessToken: token.access_token,
+        cloudId: token.cloud_id,
+        siteUrl: `https://api.atlassian.com/ex/confluence/${token.cloud_id}`,
+      };
+    },
+  },
+};
 ```
 
 ## Editor Features
@@ -337,22 +481,22 @@ Built-in support for English (`en`) and Korean (`ko`). Add custom locales:
   locale="ja"
   messages={{
     ja: {
-      'toolbar.bold': '\u592A\u5B57',
-      'toolbar.italic': '\u659C\u4F53',
+      'toolbar.bold': '太字',
+      'toolbar.italic': '斜体',
       // ... see i18n/en.ts for all keys
     },
   }}
   supportedLocales={[
     { code: 'en', label: 'English' },
-    { code: 'ko', label: '\uD55C\uAD6D\uC5B4' },
-    { code: 'ja', label: '\u65E5\u672C\u8A9E' },
+    { code: 'ko', label: '한국어' },
+    { code: 'ja', label: '日本語' },
   ]}
 >
   <ContentKitEditor content={content} onChange={setContent} />
 </ContentKitProvider>
 ```
 
-## Quick Start
+## Parsers
 
 ### Parsing Markdown
 
@@ -412,7 +556,9 @@ const markdown = parseConfluenceStorageToMarkdown(storageFormatXhtml, {
 });
 ```
 
-### Using Tiptap Extensions (React)
+## Extensions
+
+### React
 
 ```typescript
 import { CalloutExtension, DiagramExtension, ResizableImage } from 'tiptap-content-kit/extensions';
@@ -429,7 +575,7 @@ const editor = useEditor({
 });
 ```
 
-### Using Tiptap Extensions (Vue 3)
+### Vue 3
 
 ```typescript
 import { CalloutExtension, DiagramExtension, ResizableImage } from 'tiptap-content-kit/extensions-vue';
@@ -446,7 +592,7 @@ const editor = useEditor({
 });
 ```
 
-### Block Schema & Validation
+## Schema & Validation
 
 ```typescript
 import { BLOCK_TYPES, isValidBlockType, sanitizeBlock } from 'tiptap-content-kit/schema';
@@ -461,7 +607,7 @@ const { blocks, corrections, blockTypesUsed } = validateAIOutput(rawBlocks);
 // corrections: ["Fixed invalid callout variant 'note' -> 'info'", ...]
 ```
 
-### Utilities
+## Utilities
 
 ```typescript
 import { sanitizeHtmlForEmbed } from 'tiptap-content-kit/utils';
@@ -500,156 +646,6 @@ The schema defines 17 block types:
 Plus 4 special block types for landing pages:
 
 `quick-start-card` | `feature-card` | `feature-grid` | `doc-list`
-
-## Configuration
-
-Use the `ContentKitConfig` interface to wire up external services for parsers and server-side usage. All providers are optional.
-
-```typescript
-import type { ContentKitConfig } from 'tiptap-content-kit/providers';
-
-const config: ContentKitConfig = {
-  confluence: { ... },
-  llm: { ... },
-  storage: { ... },
-};
-```
-
-### Confluence OAuth
-
-```typescript
-const config: ContentKitConfig = {
-  confluence: {
-    getCredentials: async (userId: string) => {
-      const token = await db.getConfluenceToken(userId);
-      return {
-        accessToken: token.access_token,
-        cloudId: token.cloud_id,
-        siteUrl: `https://api.atlassian.com/ex/confluence/${token.cloud_id}`,
-      };
-    },
-  },
-};
-```
-
-### LLM Provider
-
-The `LLMProvider` interface works with **any LLM** -- OpenAI, Anthropic Claude, Google Gemini, Ollama, or any other provider. Just implement the `generateText` function.
-
-For editor-level AI features (translation, cleanup, import), see the [AI Features](#ai-features) section.
-
-#### OpenAI
-
-```typescript
-import OpenAI from 'openai';
-const openai = new OpenAI();
-
-const config: ContentKitConfig = {
-  llm: {
-    generateText: async (prompt, options) => {
-      const res = await openai.chat.completions.create({
-        model: 'gpt-4o-mini',
-        temperature: options?.temperature ?? 0.3,
-        max_tokens: options?.maxTokens,
-        messages: [
-          ...(options?.systemPrompt ? [{ role: 'system' as const, content: options.systemPrompt }] : []),
-          { role: 'user' as const, content: prompt },
-        ],
-      });
-      return res.choices[0]?.message?.content ?? '';
-    },
-  },
-};
-```
-
-#### Anthropic Claude
-
-```typescript
-import Anthropic from '@anthropic-ai/sdk';
-const anthropic = new Anthropic();
-
-const config: ContentKitConfig = {
-  llm: {
-    generateText: async (prompt, options) => {
-      const res = await anthropic.messages.create({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: options?.maxTokens ?? 4096,
-        system: options?.systemPrompt,
-        messages: [{ role: 'user', content: prompt }],
-      });
-      return res.content[0].type === 'text' ? res.content[0].text : '';
-    },
-  },
-};
-```
-
-#### Google Gemini
-
-```typescript
-import { GoogleGenAI } from '@google/genai';
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
-
-const config: ContentKitConfig = {
-  llm: {
-    generateText: async (prompt, options) => {
-      const res = await ai.models.generateContent({
-        model: 'gemini-2.0-flash',
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        config: {
-          systemInstruction: options?.systemPrompt,
-          temperature: options?.temperature ?? 0.3,
-          maxOutputTokens: options?.maxTokens,
-        },
-      });
-      return res.text ?? '';
-    },
-  },
-};
-```
-
-#### Ollama (Local)
-
-```typescript
-const config: ContentKitConfig = {
-  llm: {
-    generateText: async (prompt, options) => {
-      const res = await fetch('http://localhost:11434/api/generate', {
-        method: 'POST',
-        body: JSON.stringify({
-          model: 'llama3',
-          prompt: options?.systemPrompt ? `${options.systemPrompt}\n\n${prompt}` : prompt,
-          stream: false,
-          options: { temperature: options?.temperature ?? 0.3 },
-        }),
-      });
-      const data = await res.json();
-      return data.response;
-    },
-  },
-};
-```
-
-### Storage (S3 Example)
-
-```typescript
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-
-const s3 = new S3Client({ region: 'us-east-1' });
-
-const config: ContentKitConfig = {
-  storage: {
-    upload: async (buffer, key, contentType) => {
-      await s3.send(new PutObjectCommand({
-        Bucket: 'my-uploads-bucket',
-        Key: `images/${key}`,
-        Body: buffer,
-        ContentType: contentType,
-      }));
-      return `https://my-uploads-bucket.s3.amazonaws.com/images/${key}`;
-    },
-  },
-};
-```
 
 ## Supported File Types
 
