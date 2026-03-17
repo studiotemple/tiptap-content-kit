@@ -80,6 +80,32 @@ const CONFLUENCE_EMOTICON_MAP: Record<string, string> = {
   'broken-heart': '\u{1F494}', 'flag-off': '\u{1F3C1}', 'light-bulb': '\u{1F4A1}',
   'magnifying-glass': '\u{1F50D}', 'raised-hand': '\u270B\uFE0F', 'point-up': '\u261D\uFE0F',
   'point-down': '\u{1F447}', 'point-left': '\u{1F448}', 'point-right': '\u{1F449}',
+  // Confluence 표준 이모티콘 별칭 (Slack/GitHub 호환)
+  white_check_mark: '\u2705', 'white-check-mark': '\u2705',
+  heavy_check_mark: '\u2714\uFE0F', 'heavy-check-mark': '\u2714\uFE0F',
+  cross_mark: '\u274C', 'cross-mark': '\u274C',
+  x: '\u274C',
+  heavy_multiplication_x: '\u2716\uFE0F', 'heavy-multiplication-x': '\u2716\uFE0F',
+  negative_squared_cross_mark: '\u274E', 'negative-squared-cross-mark': '\u274E',
+  exclamation: '\u2757', heavy_exclamation_mark: '\u2757', 'heavy-exclamation-mark': '\u2757',
+  bangbang: '\u203C\uFE0F', interrobang: '\u2049\uFE0F',
+  no_entry: '\u26D4', 'no-entry': '\u26D4',
+  no_entry_sign: '\u{1F6AB}', 'no-entry-sign': '\u{1F6AB}',
+  white_circle: '\u26AA', 'white-circle': '\u26AA',
+  red_circle: '\u{1F534}', 'red-circle': '\u{1F534}',
+  large_blue_circle: '\u{1F535}', 'large-blue-circle': '\u{1F535}',
+  large_green_circle: '\u{1F7E2}', 'large-green-circle': '\u{1F7E2}',
+  large_orange_circle: '\u{1F7E0}', 'large-orange-circle': '\u{1F7E0}',
+  large_yellow_circle: '\u{1F7E1}', 'large-yellow-circle': '\u{1F7E1}',
+  large_purple_circle: '\u{1F7E3}', 'large-purple-circle': '\u{1F7E3}',
+  black_circle: '\u26AB', 'black-circle': '\u26AB',
+  white_large_square: '\u2B1C', 'white-large-square': '\u2B1C',
+  black_large_square: '\u2B1B', 'black-large-square': '\u2B1B',
+  arrow_up: '\u2B06\uFE0F', 'arrow-up': '\u2B06\uFE0F',
+  arrow_down: '\u2B07\uFE0F', 'arrow-down': '\u2B07\uFE0F',
+  arrow_left: '\u2B05\uFE0F', 'arrow-left': '\u2B05\uFE0F',
+  arrow_right: '\u27A1\uFE0F', 'arrow-right': '\u27A1\uFE0F',
+  bulb: '\u{1F4A1}',
 };
 
 /**
@@ -1338,25 +1364,26 @@ function handleTabMacro(ctx: MacroHandlerContext): DocumentBlock | DocumentBlock
 function handleExpandMacro(ctx: MacroHandlerContext): DocumentBlock | DocumentBlock[] | null {
   const { $, params, bodyText, $richBody, depth } = ctx;
   const expandTitle = params.title || params[''] || '';
-  const expandResult: DocumentBlock[] = [];
-  if (expandTitle) {
-    expandResult.push({
-      id: uuidv4(),
-      type: 'paragraph',
-      content: `**${expandTitle}**`,
-    });
-  }
+
+  let children: DocumentBlock[] = [];
   if ($richBody.length > 0) {
-    const expandBlocks = parseRichTextBodyAsBlocks($, $richBody, depth);
-    expandResult.push(...expandBlocks);
+    children = parseRichTextBodyAsBlocks($, $richBody, depth);
   } else if (bodyText) {
-    expandResult.push({
+    children.push({
       id: uuidv4(),
       type: 'paragraph',
       content: bodyText,
     });
   }
-  return expandResult.length > 0 ? expandResult : null;
+
+  if (children.length === 0) return null;
+
+  return {
+    id: uuidv4(),
+    type: 'details',
+    title: expandTitle || '클릭하여 펼치기',
+    children,
+  };
 }
 
 function handleAnchorMacro(_ctx: MacroHandlerContext): null {

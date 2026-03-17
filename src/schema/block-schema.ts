@@ -13,7 +13,7 @@ export type CalloutVariant = (typeof CALLOUT_VARIANTS)[number];
 export const BLOCK_TYPES = [
   'heading', 'paragraph', 'code', 'callout', 'list', 'table',
   'divider', 'image', 'blockquote', 'youtube', 'video',
-  'tabbed-code', 'file', 'diagram', 'anchor', 'html', 'embed',
+  'tabbed-code', 'file', 'diagram', 'anchor', 'html', 'embed', 'details',
 ] as const;
 export type BlockType = (typeof BLOCK_TYPES)[number];
 
