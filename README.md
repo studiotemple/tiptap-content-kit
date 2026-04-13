@@ -6,6 +6,8 @@ Full-featured Tiptap editor with rich toolbar, AI assistant, table controls, spe
 [![license](https://img.shields.io/npm/l/tiptap-content-kit)](./LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)](https://www.typescriptlang.org/)
 
+> **[Live Demo](https://studiotemple.github.io/tiptap-content-kit/)** -- Try the editor in your browser
+
 ## Screenshots
 
 | Light Mode | Dark Mode |
