@@ -24,7 +24,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
           cache-dependency-path: |
             package-lock.json
@@ -32,7 +32,7 @@ jobs:
 
       # Build the library first (so demo can resolve source files)
       - name: Install library dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Build library
         run: npm run build
@@ -40,7 +40,7 @@ jobs:
       # Build the demo app
       - name: Install demo dependencies
         working-directory: demo
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: Build demo
         working-directory: demo
